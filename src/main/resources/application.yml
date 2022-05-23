@@ -1,0 +1,44 @@
+server:
+  port: 10090
+
+spring:
+  web:
+    resources:
+      add-mappings: false
+  datasource:
+    url: jdbc:mysql://localhost:3307/shop?createDatabaseIfNotExist=true
+    username: root
+    password: Armin#123
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+  liquibase:
+    change-log: db/changelog/changelog-master.xml
+  redis:
+    host: localhost
+    port: 6379
+    password: admin
+    jedis:
+      pool:
+        max-idle: 8
+        max-active: 16
+        min-idle: 4
+  application:
+    name: shop
+
+shop:
+  secret: secreTkjh15H7uJhgSHOP0plFkjtuwerqJm5Oop7wWwlkHQasY
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com:
+      shop: debug
+    liquibase: info

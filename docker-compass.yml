@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  shop:
+    image: shop:latest
+    container_name: shop
+    depends_on:
+      - mysql-server
+      - redis-server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-server:3306/shop?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Armin#123
+      - SPRING_REDIS_HOST=redis-server
+    ports:
+      - "10090:10090"
+
+  mysql-server:
+    build:
+      context: .
+    image: mysql:latest
+    restart: unless-stopped
+    container_name: shop-mysql-server
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=Armin#123
+
+  redis-server:
+    image: redis:latest
+    restart: always
+    container_name: shop-redis-server
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass admin
