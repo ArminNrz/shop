@@ -1,9 +1,9 @@
-package com.shop.controller;
+package com.shop.controller.auth;
 
 import com.shop.common.Constant;
-import com.shop.dto.ChangePasswordDTO;
-import com.shop.dto.UserCreateDTO;
-import com.shop.dto.UserDTO;
+import com.shop.dto.auth.ChangePasswordDTO;
+import com.shop.dto.auth.UserCreateDTO;
+import com.shop.dto.auth.UserDTO;
 import com.shop.service.entity.UserService;
 import com.shop.service.higlevel.OtpService;
 import com.shop.specification.AppUserSpecification;

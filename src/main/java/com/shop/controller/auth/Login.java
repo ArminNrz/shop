@@ -1,7 +1,7 @@
-package com.shop.controller;
+package com.shop.controller.auth;
 
 import com.shop.common.Constant;
-import com.shop.dto.OtpResponse;
+import com.shop.dto.auth.OtpResponse;
 import com.shop.entity.OtpEntity;
 import com.shop.service.higlevel.OtpService;
 import lombok.RequiredArgsConstructor;

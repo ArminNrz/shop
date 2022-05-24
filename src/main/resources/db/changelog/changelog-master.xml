@@ -4,10 +4,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <include file="db/changelog/2022/04/14-01-changelog.xml"
+    <include file="db/changelog/2022/05/24-01-changelog.xml"
              relativeToChangelogFile="false"/>
 
-    <include file="db/changelog/2022/04/14-02-add_initial_data.xml"
+    <include file="db/changelog/2022/05/24-02-add_initial_data.xml"
              relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

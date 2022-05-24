@@ -39,6 +39,9 @@ public class AppUser {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private AppUserStocksManager stocksManager;
+
     @Override
     public String toString() {
         return "AppUser{" +

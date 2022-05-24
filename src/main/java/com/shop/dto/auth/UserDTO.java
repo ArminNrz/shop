@@ -1,4 +1,4 @@
-package com.shop.dto;
+package com.shop.dto.auth;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,4 +1,4 @@
-package com.shop.dto;
+package com.shop.dto.auth;
 
 import com.shop.common.Constant;
 import lombok.Data;

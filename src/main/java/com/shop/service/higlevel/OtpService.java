@@ -1,8 +1,8 @@
 package com.shop.service.higlevel;
 
 import com.shop.common.Constant;
-import com.shop.dto.ChangePasswordDTO;
-import com.shop.dto.OtpResponse;
+import com.shop.dto.auth.ChangePasswordDTO;
+import com.shop.dto.auth.OtpResponse;
 import com.shop.entity.AppUser;
 import com.shop.entity.OtpEntity;
 import com.shop.entity.Role;
@@ -46,7 +46,7 @@ public class OtpService {
     }
 
     private OtpEntity getOtpEntity(String phoneNumber) {
-    /*
+        /*
         find user
          */
         AppUser user = userService.getByPhoneNumber(phoneNumber);

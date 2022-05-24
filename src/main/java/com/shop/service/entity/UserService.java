@@ -1,8 +1,8 @@
 package com.shop.service.entity;
 
 import com.shop.common.Constant;
-import com.shop.dto.UserCreateDTO;
-import com.shop.dto.UserDTO;
+import com.shop.dto.auth.UserCreateDTO;
+import com.shop.dto.auth.UserDTO;
 import com.shop.entity.AppUser;
 import com.shop.entity.Role;
 import com.shop.mapper.UserMapper;
