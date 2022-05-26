@@ -4,9 +4,12 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shop.common.Constant;
+import com.shop.entity.AppUser;
 import com.shop.security.data.AuthorizationData;
 import com.shop.security.handler.JwtHandler;
 import com.shop.security.handler.TokenHandler;
+import com.shop.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,7 @@ public class SecurityService {
 
     private final JwtHandler jwtHandler;
     private final TokenHandler tokenHandler;
+    private final UserService userService;
 
     public String createAccessToken(HttpServletRequest request, String phoneNumber, List<String> roles) {
         return tokenHandler.createAccessToken(request, phoneNumber, roles);
@@ -115,5 +119,21 @@ public class SecurityService {
                 "detail",
                 message);
         return data;
+    }
+
+    public AppUser getUserWithToken(String token) {
+
+        token = token.substring("Bearer ".length());
+
+        DecodedJWT decodedJWT = jwtHandler.getDecodedJWT(token);
+
+        String phoneNumber = decodedJWT.getSubject();
+
+        AppUser foundUser = userService.getByPhoneNumber(phoneNumber);
+        if (foundUser == null) {
+            throw Problem.valueOf(Status.NOT_FOUND, Constant.APP_USER_NOT_FOUND);
+        }
+
+        return foundUser;
     }
 }

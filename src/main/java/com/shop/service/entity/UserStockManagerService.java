@@ -72,4 +72,42 @@ public class UserStockManagerService {
         repository.saveAllAndFlush(entities);
         log.debug("Saved user stock managers successfully");
     }
+
+    public void saleStock(AppUserStocksManager userStocksManager, Long stockCount) {
+        log.debug("Request to sale stock for user id: {}, stockCount: {}", userStocksManager.getUserId(), stockCount);
+
+        long current = userStocksManager.getCurrent();
+        long forSale = userStocksManager.getForSale();
+
+        forSale += stockCount;
+        current -= stockCount;
+
+        userStocksManager.setCurrent(current);
+        userStocksManager.setForSale(forSale);
+
+        repository.save(userStocksManager);
+        log.info("Updated user stock manager for user id: {}, stock manager: {}", userStocksManager.getUser().getId(), userStocksManager);
+        saveLog(userStocksManager);
+    }
+
+    public void updateSaleStock(AppUserStocksManager userStocksManager, Long formerCount, Long newCount) {
+        log.debug("Request to update user stock manager: {}, formerSaleCount: {}, newSaleCount: {}", userStocksManager, formerCount, newCount);
+
+        long current = userStocksManager.getCurrent();
+        long forSale = userStocksManager.getForSale();
+
+        // revert last update operation
+        forSale -= formerCount;
+        current += formerCount;
+
+        // update new operation
+        forSale += newCount;
+        current -= newCount;
+
+        userStocksManager.setCurrent(current);
+        userStocksManager.setForSale(forSale);
+        repository.save(userStocksManager);
+        log.info("Updated user stock manager for user id: {}, stock manager: {}", userStocksManager.getUser().getId(), userStocksManager);
+        saveLog(userStocksManager);
+    }
 }
