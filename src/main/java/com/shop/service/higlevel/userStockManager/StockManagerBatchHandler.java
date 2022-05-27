@@ -1,4 +1,4 @@
-package com.shop.service.higlevel;
+package com.shop.service.higlevel.userStockManager;
 
 import com.shop.common.Constant;
 import com.shop.dto.stockManager.StockManagerCreateBatchDTO;
@@ -11,7 +11,7 @@ import com.shop.service.entity.UserStockManagerService;
 import com.shop.service.lowlevel.ExcelHelperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.DefaultProblem;
 import org.zalando.problem.Problem;
@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
+@Component
 @Slf4j
-public class UserStockManagerBatchService {
+@RequiredArgsConstructor
+public class StockManagerBatchHandler {
 
     private final ExcelHelperService excelHelperService;
     private final UserStockManagerService userStockManagerService;

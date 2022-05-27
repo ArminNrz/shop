@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -27,7 +26,7 @@ public class AppUserStockManagerLog {
     private AppUserStocksManager stocksManager;
 
     @Column(name = "created", nullable = false)
-    private LocalDateTime created;
+    private Long created;
 
     @Column(name = "last_current")
     private Long lastCurrent;
@@ -43,7 +42,7 @@ public class AppUserStockManagerLog {
 
     @PrePersist
     public void onPrePersist() {
-        setCreated(LocalDateTime.now());
+        setCreated(System.currentTimeMillis());
     }
 
     @Override

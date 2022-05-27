@@ -1,6 +1,5 @@
 package com.shop.controller.saleStock;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shop.common.Constant;
 import com.shop.dto.saleStock.SaleStockCreateDTO;
 import com.shop.dto.saleStock.SaleStockResponseDTO;
@@ -34,7 +33,7 @@ public class SaleStockController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<Void> create(@Valid @RequestBody SaleStockCreateDTO createDTO, @RequestHeader("Authorization") String token) throws JsonProcessingException {
+    public ResponseEntity<Void> create(@Valid @RequestBody SaleStockCreateDTO createDTO, @RequestHeader("Authorization") String token) {
         log.info("REST request to create sale stock with createDTO: {}", createDTO);
         managerService.create(createDTO, token);
         return ResponseEntity.created(URI.create(Constant.BASE_URL + Constant.VERSION + "/sale-stock")).build();
@@ -46,7 +45,7 @@ public class SaleStockController {
             @Valid @RequestBody SaleStockUpdateDTO updateDTO,
             @PathVariable("id") Long id,
             @RequestHeader("Authorization") String token
-    ) throws JsonProcessingException {
+    ) {
         log.info("REST request to update sale stock with updateDTO: {}", updateDTO);
         updateDTO.setId(id);
         managerService.update(updateDTO, token);
@@ -62,7 +61,7 @@ public class SaleStockController {
         log.info("REST request to get general sale stocks, with specification: {}, pageable: {}", specification, pageable);
         Page<SaleStockResponseDTO> page = service.findByUserId(specification, pageable);
         return ResponseEntity.ok()
-                //.headers(PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page))
+                .headers(PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page))
                 .body(page);
     }
 }

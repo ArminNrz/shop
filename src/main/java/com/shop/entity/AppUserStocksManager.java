@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -45,22 +44,23 @@ public class AppUserStocksManager {
     private Long willBuy; // stock wants to buy in future
 
     @Column(name = "created", nullable = false)
-    private LocalDateTime created;
+    private Long created;
 
     @Column(name = "updated")
-    private LocalDateTime updated;
+    private Long updated;
 
     @OneToMany(mappedBy = "stocksManager")
     private Set<AppUserStockManagerLog> logs;
 
     @PrePersist
     public void onPrePersist() {
-        setCreated(LocalDateTime.now());
+        setCreated(System.currentTimeMillis());
+        setUpdated(System.currentTimeMillis());
     }
 
     @PreUpdate
     public void onPreUpdate() {
-        setUpdated(LocalDateTime.now());
+        setUpdated(System.currentTimeMillis());
     }
 
     @Override
