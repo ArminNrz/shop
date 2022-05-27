@@ -1,9 +1,7 @@
 package com.shop.dto.stockManager;
 
-import com.shop.entity.AppUserStockManagerLog;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -16,6 +14,7 @@ public class StockManagerResponseDTO {
     private Long forSale;
     private Long total;
     private Long willBuy;
+    private Long updated;
     private List<StockManagerLog> logs;
 
     @Data
@@ -24,5 +23,6 @@ public class StockManagerResponseDTO {
         private Long lastForSale;
         private Long lastTotal;
         private Long lastWillBuy;
+        private Long created;
     }
 }

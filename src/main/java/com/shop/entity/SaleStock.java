@@ -10,7 +10,6 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -45,20 +44,20 @@ public class SaleStock {
     private SaleStockStatus saleStockStatus;
 
     @Column(name = "created", nullable = false)
-    private LocalDateTime created;
+    private Long created;
 
     @Column(name = "updated")
-    private Instant updated;
+    private Long updated;
 
     @PrePersist
     public void onPrePersist() {
-        setCreated(LocalDateTime.now());
-        setUpdated(Instant.now());
+        setCreated(System.currentTimeMillis());
+        setUpdated(System.currentTimeMillis());
     }
 
     @PreUpdate
     public void onPreUpdated() {
-        setUpdated(Instant.now());
+        setUpdated(System.currentTimeMillis());
     }
 
     @Override

@@ -15,4 +15,5 @@ public class SaleStockResponseDTO implements Serializable {
     private Long forSaleCount;
     private BigDecimal unitPrice;
     private SaleStockStatus status;
+    private Long updated;
 }

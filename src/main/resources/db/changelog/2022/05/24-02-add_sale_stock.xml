@@ -21,10 +21,10 @@
             <column name="sale_stock_status" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="created" type="DATETIME">
+            <column name="created" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated" type="DATETIME"/>
+            <column name="updated" type="BIGINT"/>
         </createTable>
     </changeSet>
     <changeSet id="1653395920315-13" author="armin (generated)">
