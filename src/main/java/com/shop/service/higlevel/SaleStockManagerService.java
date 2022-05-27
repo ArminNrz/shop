@@ -5,11 +5,8 @@ import com.shop.common.Constant;
 import com.shop.dto.saleStock.SaleStockCreateDTO;
 import com.shop.dto.saleStock.SaleStockUpdateDTO;
 import com.shop.entity.AppUser;
-import com.shop.entity.AppUserStocksManager;
 import com.shop.entity.SaleStock;
-import com.shop.entity.enumartion.SaleStockOperation;
 import com.shop.entity.enumartion.SaleStockStatus;
-import com.shop.jms.ProducerService;
 import com.shop.service.entity.SaleStockService;
 import com.shop.service.entity.UserStockManagerService;
 import com.shop.service.lowlevel.SecurityService;
@@ -28,17 +25,19 @@ public class SaleStockManagerService {
     private final SaleStockService saleStockService;
     private final SecurityService securityService;
     private final UserStockManagerService stockManagerService;
-    private final ProducerService producerService;
 
+    @Transactional
     public void create(SaleStockCreateDTO createDTO, String token) throws JsonProcessingException {
         AppUser user = securityService.getUserWithToken(token);
         createDTO.setUserId(user.getId());
-        producerService.sendToStockManagerUpdateQueue(createDTO, SaleStockOperation.CREATE);
+        stockManagerService.saleStock(user.getId(), createDTO.getStockCount());
+        saleStockService.create(createDTO);
     }
 
-    public void update(SaleStockUpdateDTO updateDTO, String token) throws JsonProcessingException {
+    public void update(SaleStockUpdateDTO updateDTO, String token) {
         AppUser user = securityService.getUserWithToken(token);
         SaleStock foundEntity = saleStockService.findById(updateDTO.getId());
+
         if (foundEntity == null) {
             throw Problem.valueOf(Status.NOT_FOUND, Constant.SALE_STOCK_NOT_FOUND);
         }
@@ -48,48 +47,7 @@ public class SaleStockManagerService {
             throw Problem.valueOf(Status.BAD_REQUEST, Constant.SALE_STOCK_CAN_NOT_UPDATE_UN_OPEN);
         }
 
-        updateDTO.setUserId(user.getId());
-
-        producerService.sendToStockManagerUpdateQueue(updateDTO, SaleStockOperation.UPDATE);
-    }
-
-    @Transactional
-    public void create(SaleStockCreateDTO createDTO) {
-
-        long userId = createDTO.getUserId();
-
-        AppUserStocksManager userStocksManager = stockManagerService.findByUserId(userId);
-        if (userStocksManager == null) {
-            return;
-        }
-
-        if (userStocksManager.getCurrent() < createDTO.getStockCount()) {
-            log.error("Stock count is more than user current stocks, for user id: {}", userId);
-            return;
-        }
-
-        stockManagerService.saleStock(userStocksManager, createDTO.getStockCount());
-        saleStockService.create(createDTO);
-    }
-
-    @Transactional
-    public void update(SaleStockUpdateDTO updateDTO) {
-
-        long userId = updateDTO.getUserId();
-
-        SaleStock foundEntity = saleStockService.findById(updateDTO.getId());
-        AppUserStocksManager userStocksManager = stockManagerService.findByUserId(updateDTO.getUserId());
-
-        if (userStocksManager == null) {
-            return;
-        }
-
-        if (userStocksManager.getCurrent() < updateDTO.getStockCount()) {
-            log.error("Stock count is more than user current stocks, for user id: {}", userId);
-            return;
-        }
-
-        stockManagerService.updateSaleStock(userStocksManager, foundEntity.getStockCount(), updateDTO.getStockCount());
+        stockManagerService.updateSaleStock(user.getId(), foundEntity.getStockCount(), updateDTO.getStockCount());
         saleStockService.update(updateDTO, foundEntity);
     }
 }

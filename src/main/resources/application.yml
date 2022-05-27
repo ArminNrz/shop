@@ -27,17 +27,6 @@ spring:
         max-idle: 8
         max-active: 16
         min-idle: 4
-  activemq:
-    broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
-    in-memory: true
-    non-blocking-redelivery: false
-    packages:
-      trust-all: true
-  jms:
-    listener:
-      acknowledge-mode: auto
-      concurrency: 1
-      max-concurrency: 1
   application:
     name: shop
 
