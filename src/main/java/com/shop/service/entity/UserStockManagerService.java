@@ -2,13 +2,18 @@ package com.shop.service.entity;
 
 import com.shop.common.Constant;
 import com.shop.dto.stockManager.StockManagerCreateDTO;
+import com.shop.dto.stockManager.StockManagerResponseDTO;
 import com.shop.entity.AppUserStockManagerLog;
 import com.shop.entity.AppUserStocksManager;
 import com.shop.mapper.UserStockManagerMapper;
 import com.shop.repository.AppUserStockManagerLogRepository;
 import com.shop.repository.AppUserStockManagerRepository;
+import com.shop.specification.AppUserStockManagerSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +77,7 @@ public class UserStockManagerService {
     ////////////////////////////////////////////////
 
     public AppUserStocksManager findByUserId(Long userId) {
+        log.debug("Try to find user stock manager with userId: {}", userId);
         try {
             readLock.lock();
             return findByUserIdInternal(userId);
@@ -80,8 +86,33 @@ public class UserStockManagerService {
         }
     }
 
+    public Page<StockManagerResponseDTO> findAll(AppUserStockManagerSpecification specification, Pageable pageable) {
+        log.debug("Request to find all user stock managers");
+        try {
+            readLock.lock();
+            return findAllInternal(specification, pageable);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public Page<StockManagerResponseDTO> findOne(Long userId) {
+        AppUserStocksManager entity = this.findByUserId(userId);
+        StockManagerResponseDTO responseDTO = mapper.toResponseDTO(entity);
+        return new PageImpl<>(List.of(responseDTO));
+    }
+
+    private Page<StockManagerResponseDTO> findAllInternal(AppUserStockManagerSpecification specification, Pageable pageable) {
+        Page<AppUserStocksManager> foundEntities = repository.findAll(specification, pageable);
+        if (foundEntities.isEmpty()) {
+            log.warn("No user stock manager exist");
+            return Page.empty();
+        }
+
+        return foundEntities.map(mapper::toResponseDTO);
+    }
+
     private AppUserStocksManager findByUserIdInternal(Long userId) {
-        log.debug("Try to find user stock manager with userId: {}", userId);
         Optional<AppUserStocksManager> optionalEntity = repository.findByUserId(userId);
         if (optionalEntity.isEmpty()) {
             log.warn("No such user stock manager exist with userId: {}", userId);

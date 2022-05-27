@@ -2,6 +2,7 @@ package com.shop.mapper;
 
 import com.shop.dto.stockManager.StockManagerCreateBatchDTO;
 import com.shop.dto.stockManager.StockManagerCreateDTO;
+import com.shop.dto.stockManager.StockManagerResponseDTO;
 import com.shop.entity.AppUser;
 import com.shop.entity.AppUserStockManagerLog;
 import com.shop.entity.AppUserStocksManager;
@@ -33,4 +34,9 @@ public interface UserStockManagerMapper {
     @Mapping(source = "willBuy", target = "lastWillBuy")
     @Mapping(source = "id", target = "stocksManager.id")
     AppUserStockManagerLog toLog(AppUserStocksManager entity);
+
+    @Mapping(source = "user.firstName", target = "firstName")
+    @Mapping(source = "user.lastName", target = "lastName")
+    @Mapping(source = "user.phoneNumber", target = "phoneNumber")
+    StockManagerResponseDTO toResponseDTO(AppUserStocksManager appUserStocksManager);
 }

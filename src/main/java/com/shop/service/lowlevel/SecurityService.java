@@ -136,4 +136,15 @@ public class SecurityService {
 
         return foundUser;
     }
+
+    public List<String> getTokenRoles(String token) {
+
+        token = token.substring("Bearer ".length());
+
+        DecodedJWT decodedJWT = jwtHandler.getDecodedJWT(token);
+
+        String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+
+        return List.of(roles);
+    }
 }

@@ -1,6 +1,5 @@
 package com.shop.service.higlevel;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shop.common.Constant;
 import com.shop.dto.saleStock.SaleStockCreateDTO;
 import com.shop.dto.saleStock.SaleStockUpdateDTO;
@@ -27,7 +26,7 @@ public class SaleStockManagerService {
     private final UserStockManagerService stockManagerService;
 
     @Transactional
-    public void create(SaleStockCreateDTO createDTO, String token) throws JsonProcessingException {
+    public void create(SaleStockCreateDTO createDTO, String token) {
         AppUser user = securityService.getUserWithToken(token);
         createDTO.setUserId(user.getId());
         stockManagerService.saleStock(user.getId(), createDTO.getStockCount());
