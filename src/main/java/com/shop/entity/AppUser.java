@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_user", indexes = {
@@ -41,6 +42,9 @@ public class AppUser {
 
     @OneToOne(mappedBy = "user")
     private AppUserStocksManager stocksManager;
+
+    @OneToMany(mappedBy = "user")
+    private Set<SaleStock> saleStocks;
 
     @Override
     public String toString() {

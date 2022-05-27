@@ -11,6 +11,8 @@ public class Constant {
     public static final String EXCEL_FILE_FORMAT_NOT_CORRECT = "فرمت فایل اکسل نادرست می باشد";
     public static final String INTERNAL_ERROR = "خطای داخلی";
 
+    public static final String STOCK_MANAGER_UPDATE_QUEUE = "stock_manager";
+
     /*
     APP_USER
      */
@@ -30,4 +32,14 @@ public class Constant {
     public static final String STOCK_MANAGER_TOTAL_NOT_NEGATIVE = "تعداد سهم نباید منفی باشد";
     public static final String STOCK_MANAGER_SAVED_SUCCESS = "سهام کاربر با موفقیت به ثبت رسید";
     public static final String STOCK_MANAGER_USER_EXIST_BEFORE = "اطلاعات سهام این کاربر وجود دارد امکان ایجاد دوباره نیست";
+    public static final String STOCK_MANAGER_EMPTY = "برای این کاربر سهامی به ثبت نرسیده است";
+
+    /*
+    SALE_STOCK
+     */
+    public static final String SALE_STOCK_STOCK_COUNT_EMPTY = "تعداد سهم نباید خالی باشد";
+    public static final String SALE_STOCK_UNIT_PRICE_EMPTY = "قیمت واحد سهم نباید خالی باشد";
+    public static final String SALE_STOCK_NOT_FOUND = "چنین رکوردی برای فروش سهام وجود ندارد";
+    public static final String SALE_STOCK_CAN_NOT_UPDATE_UN_OPEN = "رکورد فروش سهام در این وضعیت قابلیت به روز رسانی ندارد";
+    public static final String SALE_STOCK_STOCK_COUNT_MORE_THAN_USER_CURRENT_STOCK = "تعداد سهام قرار داده شده برای فروش از تعداد سهام کاربر بیشتر است";
 }
