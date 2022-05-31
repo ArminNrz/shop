@@ -10,6 +10,7 @@ import com.shop.repository.AppUserRepository;
 import com.shop.specification.AppUserSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -68,9 +69,13 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(createDTO.getPassword()));
         grantUserRole(user);
 
-        user = repository.save(user);
+        try {
+            user = repository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            log.error("This phone number is iterable, phoneNumber: {}", createDTO.getPhoneNumber());
+            throw Problem.valueOf(Status.NOT_ACCEPTABLE, Constant.APP_USER_PHONE_NUMBER_ITERATED);
+        }
         log.info("Saved user: {}", user);
-
         return mapper.toDto(user);
     }
 

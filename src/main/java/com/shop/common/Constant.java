@@ -23,6 +23,7 @@ public class Constant {
     public static final String APP_USER_OTP_WRONG = "کد یکبار مصرف اشتباه است";
     public static final String APP_USER_OTP_EMPTY = "کد یکبار مصرف الزامی است";
     public static final String APP_USER_NEW_PASSWORD_EMPTY = "کلمه عبور الزامی می باشد";
+    public static final String APP_USER_PHONE_NUMBER_ITERATED = "شماره تلفن توسط کاربر دیگری ثبت شده است";
 
     /*
     STOCK_MANAGER
