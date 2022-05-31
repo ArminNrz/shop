@@ -1,5 +1,5 @@
 package com.shop.entity.enumartion;
 
 public enum SaleStockStatus {
-    OPEN, CLOSE, PENDING
+    OPEN, PENDING, FINAL, CLOSE
 }

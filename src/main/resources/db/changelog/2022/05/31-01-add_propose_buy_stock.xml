@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="1653940625454-1" author="armin (generated)">
+        <createTable tableName="propose_buy_stock">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_propose_buy_stock"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="sale_stock_id" type="BIGINT"/>
+            <column name="propose_count" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="propose_unit_cost" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1653940625454-2" author="armin (generated)">
+        <addForeignKeyConstraint baseColumnNames="sale_stock_id" baseTableName="propose_buy_stock"
+                                 constraintName="FK_PROPOSE_BUY_STOCK_ON_SALE_STOCK" referencedColumnNames="id"
+                                 referencedTableName="sale_stock"/>
+
+        <createIndex indexName="sale_stock_idx" tableName="propose_buy_stock">
+            <column name="sale_stock_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1653940625454-3" author="armin (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="propose_buy_stock"
+                                 constraintName="FK_PROPOSE_BUY_STOCK_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="app_user"/>
+    </changeSet>
+
+</databaseChangeLog>

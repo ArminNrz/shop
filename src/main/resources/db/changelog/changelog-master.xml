@@ -4,13 +4,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <include file="db/changelog/2022/05/24-01-changelog.xml"
-             relativeToChangelogFile="false"/>
-
-    <include file="db/changelog/2022/05/24-02-add_initial_data.xml"
-             relativeToChangelogFile="false"/>
-
-    <include file="db/changelog/2022/05/24-02-add_sale_stock.xml"
-             relativeToChangelogFile="false"/>
+    <include file="db/changelog/2022/05/22-01-add_user_role.xml"/>
+    <include file="db/changelog/2022/05/23-02-add_user_stock_manager.xml"/>
+    <include file="db/changelog/2022/05/24-02-add_initial_data.xml"/>
+    <include file="db/changelog/2022/05/25-02-add_sale_stock.xml"/>
+    <include file="db/changelog/2022/05/31-01-add_propose_buy_stock.xml"/>
 
 </databaseChangeLog>

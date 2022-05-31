@@ -1,6 +1,7 @@
 package com.shop.service.entity;
 
 import com.shop.common.Constant;
+import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
 import com.shop.dto.stockManager.StockManagerCreateDTO;
 import com.shop.dto.stockManager.StockManagerResponseDTO;
 import com.shop.entity.AppUserStockManagerLog;
@@ -202,6 +203,56 @@ public class UserStockManagerService {
         repository.save(foundEntity);
         log.info("Updated user stock manager for user id: {}, stock manager: {}", foundEntity.getUser().getId(), foundEntity);
     }
+
+    /////////////////////////////////////////////////
+    // PROPOSE TO BUY
+    ////////////////////////////////////////////////
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void proposeToBuy(ProposeBuyStockCreateDTO buyStockCreateDTO) {
+        log.debug("propose to buy stock, with buy stock create DTO: {}", buyStockCreateDTO);
+
+        AppUserStocksManager entity = this.findByUserId(buyStockCreateDTO.getUserId());
+
+        try {
+            writeLock.lock();
+            increaseWillBuy(entity, buyStockCreateDTO.getProposeCount());
+        } finally {
+            writeLock.unlock();
+        }
+
+        this.saveLog(entity);
+    }
+
+    private void increaseWillBuy(AppUserStocksManager entity, Long proposeCount) {
+        long willBuy = entity.getWillBuy();
+        willBuy += proposeCount;
+        entity.setWillBuy(willBuy);
+        repository.save(entity);
+        log.info("increase will buy user stock manager for user id: {}, stock manager: {}", entity.getUser().getId(), entity);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void cancelProposeToBuy(Long proposeCount, Long userId) {
+        log.debug("Try to cancel propose to buy for userId: {}", userId);
+
+        AppUserStocksManager entity = this.findByUserId(userId);
+
+        try {
+            writeLock.lock();
+            cancelProposeToBuyInternal(entity, proposeCount);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    private void cancelProposeToBuyInternal(AppUserStocksManager entity, Long proposeCount) {
+        long willBuy = entity.getWillBuy();
+        willBuy = willBuy - proposeCount;
+        entity.setWillBuy(willBuy);
+        repository.save(entity);
+    }
+
 
     /////////////////////////////////////////////////
     // COMMON

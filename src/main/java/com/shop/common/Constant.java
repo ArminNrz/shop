@@ -9,9 +9,8 @@ public class Constant {
     public static final String VERSION = "/v1";
     public static final String EXCEL_FILE_HAS_PROBLEM = "فایل اکسل مشکل دارد";
     public static final String EXCEL_FILE_FORMAT_NOT_CORRECT = "فرمت فایل اکسل نادرست می باشد";
+    public static final String FORBIDDEN = "دسترسی به این سرویس با یوزر شما امکان پذیر نمی باشد";
     public static final String INTERNAL_ERROR = "خطای داخلی";
-
-    public static final String STOCK_MANAGER_UPDATE_QUEUE = "stock_manager";
 
     /*
     APP_USER
@@ -42,4 +41,12 @@ public class Constant {
     public static final String SALE_STOCK_NOT_FOUND = "چنین رکوردی برای فروش سهام وجود ندارد";
     public static final String SALE_STOCK_CAN_NOT_UPDATE_UN_OPEN = "رکورد فروش سهام در این وضعیت قابلیت به روز رسانی ندارد";
     public static final String SALE_STOCK_STOCK_COUNT_MORE_THAN_USER_CURRENT_STOCK = "تعداد سهام قرار داده شده برای فروش از تعداد سهام کاربر بیشتر است";
+    public static final String SALE_STOCK_NOT_IN_PROPOSE_TO_BUY_STATUS = "امکان ثبت درخواست برای خرید این سهام وجود ندارد";
+
+    /*
+    PROPOSE_BUY_STOCK
+     */
+    public static final String PROPOSE_BUY_STOCK_COUNT_EMPTY = "تعداد سهم پیشنهادی نباید خالی باشد";
+    public static final String PROPOSE_BUY_STOCK_PROPOSE_MORE_THAN_COUNT = "تعداد سهام ویشنهادی برای خرید بیشتر از سهام قرار داده شده برای فروش است";
+    public static final String PROPOSE_BUY_STOCK_NOT_FOUND = "چنین پیشنهاد خرید سهامی وجود ندارد";
 }
