@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
@@ -61,6 +62,7 @@ public class UserService implements UserDetailsService {
         return appUserOptional.get();
     }
 
+    @Transactional
     public UserDTO create(UserCreateDTO createDTO) {
         log.debug("Try to create User: {}", createDTO);
 
