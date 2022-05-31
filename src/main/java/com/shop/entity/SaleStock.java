@@ -9,12 +9,12 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "sale_stock", indexes = {
-        @Index(name = "user_id_idx", columnList = "user_id")
+        @Index(name = "user_id_idx", columnList = "user_id, id")
 })
 @Getter
 @Setter
@@ -38,6 +38,10 @@ public class SaleStock {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
+
+    @OneToMany(mappedBy = "saleStock", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Set<ProposeBuyStock> proposeBuyStocks;
 
     @Column(name = "sale_stock_status", nullable = false)
     @Enumerated(EnumType.STRING)

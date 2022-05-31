@@ -49,11 +49,30 @@ public class SaleStockService {
         return saleStockOptional.get();
     }
 
-    public Page<SaleStockResponseDTO> findByUserId(SaleStockSpecification specification, Pageable pageable) {
-        log.debug("Try to find sale stock with specification: {}, pageable: {}", specification, pageable);
+    public SaleStock findByIdAndUserId(Long id, Long userId) {
+        log.debug("Try to find sale stock by id: {}, userId: {}", id, userId);
+        Optional<SaleStock> entityOptional = repository.findByIdAndUserId(id, userId);
+        if (entityOptional.isEmpty()) {
+            log.error("No such sale stock exist for id: {}, userId: {}", id, userId);
+            return null;
+        }
+
+        log.debug("Found sale stock for id: {} and userId: {}, is: {}", id, userId, entityOptional.get());
+        return entityOptional.get();
+    }
+
+    public Page<SaleStockResponseDTO> findGeneral(SaleStockSpecification specification, Pageable pageable) {
+        log.debug("Try to general find sale stock with specification: {}, pageable: {}", specification, pageable);
         Page<SaleStockResponseDTO> saleStocks = repository.findAll(specification, pageable)
                 .map(mapper::toResponseDTO);
         log.debug("Found saleStocks: {}", saleStocks);
         return saleStocks;
+    }
+
+    public void updateStatus(SaleStock saleStock, SaleStockStatus newStatus) {
+        log.debug("Try to update status of sale stock: {}, to status: {}", saleStock, newStatus);
+        saleStock.setSaleStockStatus(newStatus);
+        repository.save(saleStock);
+        log.debug("Updated sale stock: {}", saleStock);
     }
 }

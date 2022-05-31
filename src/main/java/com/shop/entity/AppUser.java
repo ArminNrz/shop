@@ -1,6 +1,8 @@
 package com.shop.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -45,6 +47,9 @@ public class AppUser {
 
     @OneToMany(mappedBy = "user")
     private Set<SaleStock> saleStocks;
+
+    @OneToMany(mappedBy = "user")
+    private Set<ProposeBuyStock> proposeBuyStocks;
 
     @Override
     public String toString() {
