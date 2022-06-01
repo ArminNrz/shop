@@ -32,8 +32,6 @@ public class Constant {
     public static final String STOCK_MANAGER_TOTAL_NOT_NEGATIVE = "تعداد سهم نباید منفی باشد";
     public static final String STOCK_MANAGER_SAVED_SUCCESS = "سهام کاربر با موفقیت به ثبت رسید";
     public static final String STOCK_MANAGER_USER_EXIST_BEFORE = "اطلاعات سهام این کاربر وجود دارد امکان ایجاد دوباره نیست";
-    public static final String STOCK_MANAGER_EMPTY = "برای این کاربر سهامی به ثبت نرسیده است";
-
     /*
     SALE_STOCK
      */

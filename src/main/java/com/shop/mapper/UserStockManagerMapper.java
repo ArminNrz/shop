@@ -1,9 +1,9 @@
 package com.shop.mapper;
 
+import com.shop.dto.auth.UserDTO;
 import com.shop.dto.stockManager.StockManagerCreateBatchDTO;
 import com.shop.dto.stockManager.StockManagerCreateDTO;
 import com.shop.dto.stockManager.StockManagerResponseDTO;
-import com.shop.entity.AppUser;
 import com.shop.entity.AppUserStockManagerLog;
 import com.shop.entity.AppUserStocksManager;
 import org.mapstruct.Mapper;
@@ -24,7 +24,7 @@ public interface UserStockManagerMapper {
     @Mapping(target = "forSale", expression = "java( Long.valueOf(\"0\") )")
     @Mapping(target = "willBuy", expression = "java( Long.valueOf(\"0\") )")
     @Mapping(source = "appUser.id", target = "user.id")
-    AppUserStocksManager toEntity(StockManagerCreateBatchDTO batchDTO, AppUser appUser);
+    AppUserStocksManager toEntity(StockManagerCreateBatchDTO batchDTO, UserDTO appUser);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)

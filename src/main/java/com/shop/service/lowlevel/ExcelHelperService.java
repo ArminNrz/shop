@@ -63,6 +63,14 @@ public class ExcelHelperService {
                             dto.setPhoneNumber(phoneNumber);
                             break;
                         case 1:
+                            String firstName = currentCell.getStringCellValue();
+                            dto.setFirstName(firstName);
+                            break;
+                        case 2:
+                            String lastName = currentCell.getStringCellValue();
+                            dto.setLastName(lastName);
+                            break;
+                        case 3:
                             dto.setTotal((long) currentCell.getNumericCellValue());
                             break;
                         default:
