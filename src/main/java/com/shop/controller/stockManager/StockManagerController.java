@@ -2,8 +2,8 @@ package com.shop.controller.stockManager;
 
 import com.shop.common.Constant;
 import com.shop.dto.stockManager.StockManagerCreateBatchResponseDTO;
-import com.shop.dto.stockManager.StockManagerCreateDTO;
 import com.shop.dto.stockManager.StockManagerResponseDTO;
+import com.shop.dto.stockManager.StockManagerUpdateDTO;
 import com.shop.service.higlevel.userStockManager.StockManagerService;
 import com.shop.specification.AppUserStockManagerSpecification;
 import com.shop.utility.PaginationUtil;
@@ -34,9 +34,12 @@ public class StockManagerController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> create(@Valid @RequestBody StockManagerCreateDTO createDTO) {
-        log.info("REST request to create user stock manager with StockManagerDTO: {}", createDTO);
-        stockManagerService.create(createDTO);
+    public ResponseEntity<Void> create(
+            @Valid @RequestBody StockManagerUpdateDTO updateDTO,
+            @RequestHeader("Authorization") String token
+    ) {
+        log.info("REST request to create user stock manager with StockManagerDTO: {}", updateDTO);
+        stockManagerService.reset(updateDTO, token);
         return ResponseEntity.created(uri).build();
     }
 

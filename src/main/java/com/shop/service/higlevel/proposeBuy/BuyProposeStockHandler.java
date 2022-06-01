@@ -7,7 +7,7 @@ import com.shop.entity.SaleStock;
 import com.shop.entity.enumartion.SaleStockStatus;
 import com.shop.service.entity.ProposeBuyStockService;
 import com.shop.service.entity.SaleStockService;
-import com.shop.service.entity.UserStockManagerService;
+import com.shop.service.entity.userStockManager.UserStockManagerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class BuyProposeStockHandler {
     public void buy(ProposeBuyStockCreateDTO buyStockCreateDTO, AppUser user) {
         SaleStock saleStock = saleStockService.findById(buyStockCreateDTO.getSaleStockId());
         validation(buyStockCreateDTO, saleStock);
-        userStockManagerService.proposeToBuy(buyStockCreateDTO);
+        userStockManagerService.proposeToBuy(buyStockCreateDTO, user.getId());
         saleStock.setSaleStockStatus(SaleStockStatus.PENDING);
         proposeBuyStockService.create(buyStockCreateDTO, saleStock, user);
     }

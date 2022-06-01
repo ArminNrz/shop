@@ -1,13 +1,11 @@
-package com.shop.service.entity;
+package com.shop.service.entity.userStockManager;
 
 import com.shop.common.Constant;
 import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
-import com.shop.dto.stockManager.StockManagerCreateDTO;
 import com.shop.dto.stockManager.StockManagerResponseDTO;
-import com.shop.entity.AppUserStockManagerLog;
+import com.shop.dto.stockManager.StockManagerUpdateDTO;
 import com.shop.entity.AppUserStocksManager;
 import com.shop.mapper.UserStockManagerMapper;
-import com.shop.repository.AppUserStockManagerLogRepository;
 import com.shop.repository.AppUserStockManagerRepository;
 import com.shop.specification.AppUserStockManagerSpecification;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -33,7 +30,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class UserStockManagerService {
 
     private final AppUserStockManagerRepository repository;
-    private final AppUserStockManagerLogRepository logRepository;
+    private final UserStockManagerLogHandler logService;
+    private final UserStockManagerReadHandler readHandler;
+    private final UserStockManagerUpdateHandler updateHandler;
     private final UserStockManagerMapper mapper;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -45,32 +44,11 @@ public class UserStockManagerService {
     ////////////////////////////////////////////////
 
     @Transactional
-    public void create(StockManagerCreateDTO createDTO) {
-        log.debug("Request to create user stock manager with dto: {}", createDTO);
-        checkUserStockManagerNotExist(createDTO.getUserId());
-        AppUserStocksManager entity = mapper.toEntity(createDTO);
-        repository.save(entity);
-        saveLog(entity);
-        log.debug("Created User stock manager: {}", entity);
-    }
-
-    @Transactional
     public void createBatch(List<AppUserStocksManager> entities) {
         log.debug("Request to create user stock manager in batch mode, entities: {}", entities);
         repository.saveAllAndFlush(entities);
+        //entities.forEach(logService::saveLog);
         log.debug("Saved user stock managers successfully");
-    }
-
-    /////////////////////////////////////////////////
-    // SAVE-LOG
-    ////////////////////////////////////////////////
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveLog(AppUserStocksManager entity) {
-        AppUserStockManagerLog logEntities = mapper.toLog(entity);
-        log.debug("Try to save log for log logEntities: {}", logEntities);
-        logRepository.save(logEntities);
-        log.debug("Saved logs for user stock managers");
     }
 
     /////////////////////////////////////////////////
@@ -81,7 +59,7 @@ public class UserStockManagerService {
         log.debug("Try to find user stock manager with userId: {}", userId);
         try {
             readLock.lock();
-            return findByUserIdInternal(userId);
+            return readHandler.findByUserIdInternal(userId);
         } finally {
             readLock.unlock();
         }
@@ -91,7 +69,7 @@ public class UserStockManagerService {
         log.debug("Request to find all user stock managers");
         try {
             readLock.lock();
-            return findAllInternal(specification, pageable);
+            return readHandler.findAllInternal(specification, pageable);
         } finally {
             readLock.unlock();
         }
@@ -101,28 +79,6 @@ public class UserStockManagerService {
         AppUserStocksManager entity = this.findByUserId(userId);
         StockManagerResponseDTO responseDTO = mapper.toResponseDTO(entity);
         return new PageImpl<>(List.of(responseDTO));
-    }
-
-    private Page<StockManagerResponseDTO> findAllInternal(AppUserStockManagerSpecification specification, Pageable pageable) {
-        Page<AppUserStocksManager> foundEntities = repository.findAll(specification, pageable);
-        if (foundEntities.isEmpty()) {
-            log.warn("No user stock manager exist");
-            return Page.empty();
-        }
-
-        return foundEntities.map(mapper::toResponseDTO);
-    }
-
-    private AppUserStocksManager findByUserIdInternal(Long userId) {
-        Optional<AppUserStocksManager> optionalEntity = repository.findByUserId(userId);
-        if (optionalEntity.isEmpty()) {
-            log.warn("No such user stock manager exist with userId: {}", userId);
-            return null;
-        }
-
-        AppUserStocksManager entity = optionalEntity.get();
-        log.debug("Found user stock manager: {}", entity);
-        return entity;
     }
 
     /////////////////////////////////////////////////
@@ -138,26 +94,12 @@ public class UserStockManagerService {
 
         try {
             writeLock.lock();
-            sale(stockCount, userStocksManager);
+            updateHandler.sale(stockCount, userStocksManager);
         } finally {
             writeLock.unlock();
         }
 
-        saveLog(userStocksManager);
-    }
-
-    private void sale(Long stockCount, AppUserStocksManager userStocksManager) {
-        long current = userStocksManager.getCurrent();
-        long forSale = userStocksManager.getForSale();
-
-        forSale += stockCount;
-        current -= stockCount;
-
-        userStocksManager.setCurrent(current);
-        userStocksManager.setForSale(forSale);
-
-        repository.save(userStocksManager);
-        log.info("Updated user stock manager for user id: {}, stock manager: {}", userStocksManager.getUser().getId(), userStocksManager);
+        logService.saveLog(userStocksManager, Constant.STOCK_MANAGER_SALE_DESC, userId);
     }
 
     private void saleStockValidations(Long userId, Long stockCount, AppUserStocksManager userStocksManager) {
@@ -178,30 +120,12 @@ public class UserStockManagerService {
 
         try {
             writeLock.lock();
-            updateSale(formerCount, newCount, foundEntity);
+            updateHandler.updateSale(formerCount, newCount, foundEntity);
         } finally {
             writeLock.unlock();
         }
         
-        saveLog(foundEntity);
-    }
-
-    private void updateSale(Long formerCount, Long newCount, AppUserStocksManager foundEntity) {
-        long current = foundEntity.getCurrent();
-        long forSale = foundEntity.getForSale();
-
-        // revert last update operation
-        forSale -= formerCount;
-        current += formerCount;
-
-        // update new operation
-        forSale += newCount;
-        current -= newCount;
-
-        foundEntity.setCurrent(current);
-        foundEntity.setForSale(forSale);
-        repository.save(foundEntity);
-        log.info("Updated user stock manager for user id: {}, stock manager: {}", foundEntity.getUser().getId(), foundEntity);
+        logService.saveLog(foundEntity, Constant.STOCK_MANAGER_UPDATE_SALE_STOCK_DESC, userId);
     }
 
     /////////////////////////////////////////////////
@@ -209,27 +133,19 @@ public class UserStockManagerService {
     ////////////////////////////////////////////////
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void proposeToBuy(ProposeBuyStockCreateDTO buyStockCreateDTO) {
+    public void proposeToBuy(ProposeBuyStockCreateDTO buyStockCreateDTO, Long userId) {
         log.debug("propose to buy stock, with buy stock create DTO: {}", buyStockCreateDTO);
 
         AppUserStocksManager entity = this.findByUserId(buyStockCreateDTO.getUserId());
 
         try {
             writeLock.lock();
-            increaseWillBuy(entity, buyStockCreateDTO.getProposeCount());
+            updateHandler.increaseWillBuy(entity, buyStockCreateDTO.getProposeCount());
         } finally {
             writeLock.unlock();
         }
 
-        this.saveLog(entity);
-    }
-
-    private void increaseWillBuy(AppUserStocksManager entity, Long proposeCount) {
-        long willBuy = entity.getWillBuy();
-        willBuy += proposeCount;
-        entity.setWillBuy(willBuy);
-        repository.save(entity);
-        log.info("increase will buy user stock manager for user id: {}, stock manager: {}", entity.getUser().getId(), entity);
+        logService.saveLog(entity, Constant.STOCK_MANAGER_BUY_STOCK_DESC, userId);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -240,28 +156,39 @@ public class UserStockManagerService {
 
         try {
             writeLock.lock();
-            cancelProposeToBuyInternal(entity, proposeCount);
+            updateHandler.cancelProposeToBuyInternal(entity, proposeCount);
         } finally {
             writeLock.unlock();
         }
+
+        logService.saveLog(entity, Constant.STOCK_MANAGER_CANCEL_BUY_DESC, userId);
     }
 
-    private void cancelProposeToBuyInternal(AppUserStocksManager entity, Long proposeCount) {
-        long willBuy = entity.getWillBuy();
-        willBuy = willBuy - proposeCount;
-        entity.setWillBuy(willBuy);
-        repository.save(entity);
-    }
+    /////////////////////////////////////////////////
+    // RESET
+    ////////////////////////////////////////////////
 
+    @Transactional
+    public void reset(StockManagerUpdateDTO updateDTO, Long modifierId) {
+        log.debug("Try to reset stock manager with: {}", updateDTO);
+        AppUserStocksManager entity = this.findByUserId(updateDTO.getUserId());
+        if (entity == null) {
+            entity = mapper.toEntity(updateDTO);
+        }
+
+        try {
+            writeLock.lock();
+            updateHandler.resetInternal(entity, updateDTO);
+        } finally {
+            writeLock.unlock();
+        }
+
+        logService.saveLog(entity, Constant.STOCK_MANAGER_RESET_DESC, modifierId);
+    }
 
     /////////////////////////////////////////////////
     // COMMON
     ////////////////////////////////////////////////
-
-    public void checkUserStockManagerNotExist(Long userId) {
-        AppUserStocksManager foundEntity = this.findByUserId(userId);
-        validation(userId, foundEntity != null, "Can not re-create user stock manager for userId: {}", Status.BAD_REQUEST, Constant.STOCK_MANAGER_USER_EXIST_BEFORE);
-    }
 
     private void validation(Long userId, boolean hasError, String logMessage, Status status, String message) {
         if (hasError) {

@@ -9,7 +9,7 @@ import com.shop.entity.SaleStock;
 import com.shop.entity.enumartion.SaleStockStatus;
 import com.shop.service.entity.ProposeBuyStockService;
 import com.shop.service.entity.SaleStockService;
-import com.shop.service.entity.UserStockManagerService;
+import com.shop.service.entity.userStockManager.UserStockManagerService;
 import com.shop.service.lowlevel.SecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

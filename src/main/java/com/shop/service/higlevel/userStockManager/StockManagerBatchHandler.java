@@ -9,7 +9,7 @@ import com.shop.entity.AppUserStocksManager;
 import com.shop.mapper.UserMapper;
 import com.shop.mapper.UserStockManagerMapper;
 import com.shop.service.entity.UserService;
-import com.shop.service.entity.UserStockManagerService;
+import com.shop.service.entity.userStockManager.UserStockManagerService;
 import com.shop.service.lowlevel.ExcelHelperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -62,6 +62,19 @@ public class UserService implements UserDetailsService {
         return appUserOptional.get();
     }
 
+    public AppUser getById(Long id) {
+        log.debug("Try to get user by id: {}", id);
+
+        Optional<AppUser> entityOptional = repository.findById(id);
+        if (entityOptional.isEmpty()) {
+            log.warn("No such user exist with id: {}", id);
+            return null;
+        }
+
+        log.debug("Found user: {}", entityOptional.get());
+        return entityOptional.get();
+    }
+
     @Transactional
     public UserDTO create(UserCreateDTO createDTO) {
         log.debug("Try to create User: {}", createDTO);

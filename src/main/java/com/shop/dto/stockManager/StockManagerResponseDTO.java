@@ -23,6 +23,8 @@ public class StockManagerResponseDTO {
         private Long lastForSale;
         private Long lastTotal;
         private Long lastWillBuy;
+        private String description;
+        private Long modifier;
         private Long created;
     }
 }
