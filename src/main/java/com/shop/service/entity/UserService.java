@@ -10,6 +10,7 @@ import com.shop.repository.AppUserRepository;
 import com.shop.specification.AppUserSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
@@ -60,6 +62,20 @@ public class UserService implements UserDetailsService {
         return appUserOptional.get();
     }
 
+    public AppUser getById(Long id) {
+        log.debug("Try to get user by id: {}", id);
+
+        Optional<AppUser> entityOptional = repository.findById(id);
+        if (entityOptional.isEmpty()) {
+            log.warn("No such user exist with id: {}", id);
+            return null;
+        }
+
+        log.debug("Found user: {}", entityOptional.get());
+        return entityOptional.get();
+    }
+
+    @Transactional
     public UserDTO create(UserCreateDTO createDTO) {
         log.debug("Try to create User: {}", createDTO);
 
@@ -68,9 +84,13 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(createDTO.getPassword()));
         grantUserRole(user);
 
-        user = repository.save(user);
+        try {
+            user = repository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            log.error("This phone number is iterable, phoneNumber: {}", createDTO.getPhoneNumber());
+            throw Problem.valueOf(Status.NOT_ACCEPTABLE, Constant.APP_USER_PHONE_NUMBER_ITERATED);
+        }
         log.info("Saved user: {}", user);
-
         return mapper.toDto(user);
     }
 

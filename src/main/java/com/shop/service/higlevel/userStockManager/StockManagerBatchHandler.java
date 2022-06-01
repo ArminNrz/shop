@@ -1,19 +1,20 @@
 package com.shop.service.higlevel.userStockManager;
 
 import com.shop.common.Constant;
+import com.shop.dto.auth.UserDTO;
 import com.shop.dto.stockManager.StockManagerCreateBatchDTO;
 import com.shop.dto.stockManager.StockManagerCreateBatchResponseDTO;
 import com.shop.entity.AppUser;
 import com.shop.entity.AppUserStocksManager;
+import com.shop.mapper.UserMapper;
 import com.shop.mapper.UserStockManagerMapper;
 import com.shop.service.entity.UserService;
-import com.shop.service.entity.UserStockManagerService;
+import com.shop.service.entity.userStockManager.UserStockManagerService;
 import com.shop.service.lowlevel.ExcelHelperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import org.zalando.problem.DefaultProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
@@ -30,6 +31,7 @@ public class StockManagerBatchHandler {
     private final UserStockManagerService userStockManagerService;
     private final UserService userService;
     private final UserStockManagerMapper stockManagerMapper;
+    private final UserMapper userMapper;
 
     public StockManagerCreateBatchResponseDTO createBatch(MultipartFile excelFile) {
         log.debug("Request to create batch user stock manager with excel file");
@@ -52,19 +54,14 @@ public class StockManagerBatchHandler {
         response.setPhoneNumber(batchDTO.getPhoneNumber());
         AppUser user = userService.getByPhoneNumber(batchDTO.getPhoneNumber());
 
-        if (user == null) {
-            response.setMessage(Constant.APP_USER_NOT_FOUND);
+        if (user != null) {
+            response.setMessage(Constant.STOCK_MANAGER_USER_EXIST_BEFORE);
         }
         else {
-            AppUserStocksManager entity = stockManagerMapper.toEntity(batchDTO, user);
-
-            try {
-                userStockManagerService.checkUserStockManagerNotExist(user.getId());
-                appUserStocksManagers.add(entity);
-                response.setMessage(Constant.STOCK_MANAGER_SAVED_SUCCESS);
-            } catch (DefaultProblem exception) {
-                response.setMessage(Constant.STOCK_MANAGER_USER_EXIST_BEFORE);
-            }
+            UserDTO userDTO = userService.create(userMapper.toCreateDTO(batchDTO));
+            AppUserStocksManager entity = stockManagerMapper.toEntity(batchDTO, userDTO);
+            appUserStocksManagers.add(entity);
+            response.setMessage(Constant.STOCK_MANAGER_SAVED_SUCCESS);
         }
 
         responseDTO.addResponse(response);

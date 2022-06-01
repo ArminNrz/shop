@@ -5,6 +5,7 @@ import com.shop.dto.auth.ChangePasswordDTO;
 import com.shop.dto.auth.UserCreateDTO;
 import com.shop.dto.auth.UserDTO;
 import com.shop.service.entity.UserService;
+import com.shop.service.higlevel.AppUserManagementService;
 import com.shop.service.higlevel.OtpService;
 import com.shop.specification.AppUserSpecification;
 import com.shop.utility.PaginationUtil;
@@ -30,11 +31,12 @@ public class UserController {
 
     private final UserService service;
     private final OtpService otpService;
+    private final AppUserManagementService userManagementService;
 
     @PostMapping("")
     public ResponseEntity<UserDTO> create(@Valid @RequestBody UserCreateDTO createDTO) {
         log.info("REST request to create User: {}", createDTO);
-        UserDTO result = service.create(createDTO);
+        UserDTO result = userManagementService.create(createDTO);
         return ResponseEntity.created(URI.create("/users")).body(result);
     }
 

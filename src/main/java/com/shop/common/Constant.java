@@ -23,6 +23,7 @@ public class Constant {
     public static final String APP_USER_OTP_WRONG = "کد یکبار مصرف اشتباه است";
     public static final String APP_USER_OTP_EMPTY = "کد یکبار مصرف الزامی است";
     public static final String APP_USER_NEW_PASSWORD_EMPTY = "کلمه عبور الزامی می باشد";
+    public static final String APP_USER_PHONE_NUMBER_ITERATED = "شماره تلفن توسط کاربر دیگری ثبت شده است";
 
     /*
     STOCK_MANAGER
@@ -31,7 +32,11 @@ public class Constant {
     public static final String STOCK_MANAGER_TOTAL_NOT_NEGATIVE = "تعداد سهم نباید منفی باشد";
     public static final String STOCK_MANAGER_SAVED_SUCCESS = "سهام کاربر با موفقیت به ثبت رسید";
     public static final String STOCK_MANAGER_USER_EXIST_BEFORE = "اطلاعات سهام این کاربر وجود دارد امکان ایجاد دوباره نیست";
-    public static final String STOCK_MANAGER_EMPTY = "برای این کاربر سهامی به ثبت نرسیده است";
+    public static final String STOCK_MANAGER_SALE_DESC = "فروش سهام";
+    public static final String STOCK_MANAGER_UPDATE_SALE_STOCK_DESC = "به روز رسانی سهام در حال فروش";
+    public static final String STOCK_MANAGER_BUY_STOCK_DESC = "پیشنهاد خرید سهام";
+    public static final String STOCK_MANAGER_CANCEL_BUY_DESC = "کنسل شدن پیشنهاد خرید سهام";
+    public static final String STOCK_MANAGER_RESET_DESC = "تنظیم اتوماتیک سیستمی وضعیت سهام";
 
     /*
     SALE_STOCK

@@ -40,6 +40,12 @@ public class AppUserStockManagerLog {
     @Column(name = "last_will_buy")
     private Long lastWillBuy;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "modifier")
+    private Long modifier;
+
     @PrePersist
     public void onPrePersist() {
         setCreated(System.currentTimeMillis());
