@@ -7,7 +7,6 @@ import com.shop.entity.SaleStock;
 import com.shop.entity.enumartion.SaleStockStatus;
 import com.shop.service.entity.ProposeBuyStockService;
 import com.shop.service.entity.SaleStockService;
-import com.shop.service.entity.userStockManager.UserStockManagerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,13 +19,11 @@ import org.zalando.problem.Status;
 public class BuyProposeStockHandler {
 
     private final SaleStockService saleStockService;
-    private final UserStockManagerService userStockManagerService;
     private final ProposeBuyStockService proposeBuyStockService;
 
     public void buy(ProposeBuyStockCreateDTO buyStockCreateDTO, AppUser user) {
         SaleStock saleStock = saleStockService.findById(buyStockCreateDTO.getSaleStockId());
         validation(buyStockCreateDTO, saleStock);
-        userStockManagerService.proposeToBuy(buyStockCreateDTO, user.getId());
         saleStock.setSaleStockStatus(SaleStockStatus.PENDING);
         proposeBuyStockService.create(buyStockCreateDTO, saleStock, user);
     }

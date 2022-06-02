@@ -72,4 +72,36 @@ public class UserStockManagerUpdateHandler {
         entity.setWillBuy(0L);
         this.update(entity);
     }
+
+    public void sell(AppUserStocksManager entity, Long proposeBuyStockCount) {
+        Long total = entity.getTotal();
+        Long forSale = entity.getForSale();
+        long current;
+
+        total = total - proposeBuyStockCount;
+        forSale = forSale - proposeBuyStockCount;
+        current = total - forSale;
+
+        entity.setTotal(total);
+        entity.setCurrent(current);
+        entity.setForSale(forSale);
+
+        this.update(entity);
+    }
+
+    public void buy(AppUserStocksManager entity, Long proposeCount) {
+        long total = entity.getTotal();
+        long willBuy = entity.getWillBuy();
+        long current = entity.getCurrent();
+
+        total = total + proposeCount;
+        willBuy = willBuy - proposeCount;
+        current = current + proposeCount;
+
+        entity.setTotal(total);
+        entity.setWillBuy(willBuy);
+        entity.setCurrent(current);
+
+        this.update(entity);
+    }
 }

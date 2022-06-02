@@ -4,6 +4,7 @@ import com.shop.common.Constant;
 import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
 import com.shop.dto.stockManager.StockManagerResponseDTO;
 import com.shop.dto.stockManager.StockManagerUpdateDTO;
+import com.shop.entity.AppUser;
 import com.shop.entity.AppUserStocksManager;
 import com.shop.mapper.UserStockManagerMapper;
 import com.shop.repository.AppUserStockManagerRepository;
@@ -128,12 +129,41 @@ public class UserStockManagerService {
         logService.saveLog(foundEntity, Constant.STOCK_MANAGER_UPDATE_SALE_STOCK_DESC, userId);
     }
 
+    public void sellStock(AppUser user, Long proposeBuyStockCount, AppUser modifier) {
+        log.debug("Try to sell {} stock for user: {}", proposeBuyStockCount, user.getId());
+
+        AppUserStocksManager foundEntity = this.findByUserId(user.getId());
+
+        try {
+            writeLock.lock();
+            updateHandler.sell(foundEntity, proposeBuyStockCount);
+        } finally {
+            writeLock.unlock();
+        }
+
+        logService.saveLog(foundEntity, Constant.STOCK_MANAGER_FINALIZE_SALE, modifier.getId());
+    }
+
+    public void buyStock(AppUser user, Long proposeCount, AppUser modifier) {
+        log.debug("Try to buy {} stock for user: {}", proposeCount, user.getId());
+
+        AppUserStocksManager foundEntity = this.findByUserId(user.getId());
+
+        try {
+            writeLock.lock();
+            updateHandler.buy(foundEntity, proposeCount);
+        } finally {
+            writeLock.unlock();
+        }
+
+        logService.saveLog(foundEntity, Constant.STOCK_MANAGER_FINALIZE_BUY, modifier.getId());
+    }
+
     /////////////////////////////////////////////////
     // PROPOSE TO BUY
     ////////////////////////////////////////////////
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void proposeToBuy(ProposeBuyStockCreateDTO buyStockCreateDTO, Long userId) {
+    public void proposeToBuy(ProposeBuyStockCreateDTO buyStockCreateDTO) {
         log.debug("propose to buy stock, with buy stock create DTO: {}", buyStockCreateDTO);
 
         AppUserStocksManager entity = this.findByUserId(buyStockCreateDTO.getUserId());
@@ -145,10 +175,9 @@ public class UserStockManagerService {
             writeLock.unlock();
         }
 
-        logService.saveLog(entity, Constant.STOCK_MANAGER_BUY_STOCK_DESC, userId);
+        logService.saveLog(entity, Constant.STOCK_MANAGER_BUY_STOCK_DESC, buyStockCreateDTO.getUserId());
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void cancelProposeToBuy(Long proposeCount, Long userId) {
         log.debug("Try to cancel propose to buy for userId: {}", userId);
 

@@ -47,6 +47,9 @@ public class ProposeBuyStock implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProposeBuyStockStatus status;
 
+    @OneToOne(mappedBy = "proposeBuyStock")
+    private AcceptanceSaleStock acceptanceSaleStock;
+
     @Column(name = "created", nullable = false)
     private Long created;
 
