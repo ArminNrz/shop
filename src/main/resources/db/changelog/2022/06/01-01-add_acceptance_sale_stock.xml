@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="1654109152468-1" author="armin (generated)">
+        <createTable tableName="acceptance_sale_stock">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_acceptance_sale_stock"/>
+            </column>
+            <column name="propose_buy_stock_id" type="BIGINT"/>
+            <column name="seller_id" type="BIGINT"/>
+            <column name="buyer_id" type="BIGINT"/>
+            <column name="sell_time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sell_location" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1654109152468-16" author="armin (generated)">
+        <addForeignKeyConstraint baseColumnNames="buyer_id" baseTableName="acceptance_sale_stock"
+                                 constraintName="FK_ACCEPTANCE_SALE_STOCK_ON_BUYER" referencedColumnNames="id"
+                                 referencedTableName="app_user"/>
+    </changeSet>
+
+    <changeSet id="1654109152468-17" author="armin (generated)">
+        <addForeignKeyConstraint baseColumnNames="propose_buy_stock_id" baseTableName="acceptance_sale_stock"
+                                 constraintName="FK_ACCEPTANCE_SALE_STOCK_ON_PROPOSE_BUY_STOCK"
+                                 referencedColumnNames="id" referencedTableName="propose_buy_stock"/>
+    </changeSet>
+
+    <changeSet id="1654109152468-18" author="armin (generated)">
+        <addForeignKeyConstraint baseColumnNames="seller_id" baseTableName="acceptance_sale_stock"
+                                 constraintName="FK_ACCEPTANCE_SALE_STOCK_ON_SELLER" referencedColumnNames="id"
+                                 referencedTableName="app_user"/>
+    </changeSet>
+
+    <changeSet id="1654109152468-19" author="armin (generated)">
+        <addColumn tableName="acceptance_sale_stock">
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

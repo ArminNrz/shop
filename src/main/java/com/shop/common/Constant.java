@@ -37,6 +37,8 @@ public class Constant {
     public static final String STOCK_MANAGER_BUY_STOCK_DESC = "پیشنهاد خرید سهام";
     public static final String STOCK_MANAGER_CANCEL_BUY_DESC = "کنسل شدن پیشنهاد خرید سهام";
     public static final String STOCK_MANAGER_RESET_DESC = "تنظیم اتوماتیک سیستمی وضعیت سهام";
+    public static final String STOCK_MANAGER_FINALIZE_SALE = "نهایی سازی فروش سهام";
+    public static final String STOCK_MANAGER_FINALIZE_BUY = "نهایی سازی خرید سهام";
 
     /*
     SALE_STOCK
@@ -47,6 +49,7 @@ public class Constant {
     public static final String SALE_STOCK_CAN_NOT_UPDATE_UN_OPEN = "رکورد فروش سهام در این وضعیت قابلیت به روز رسانی ندارد";
     public static final String SALE_STOCK_STOCK_COUNT_MORE_THAN_USER_CURRENT_STOCK = "تعداد سهام قرار داده شده برای فروش از تعداد سهام کاربر بیشتر است";
     public static final String SALE_STOCK_NOT_IN_PROPOSE_TO_BUY_STATUS = "امکان ثبت درخواست برای خرید این سهام وجود ندارد";
+    public static final String SALE_STOCK_NOT_BELONG_TO_USER = "این درخواست فروش سهام مربوط به کاربر نمی باشد";
 
     /*
     PROPOSE_BUY_STOCK
@@ -54,4 +57,14 @@ public class Constant {
     public static final String PROPOSE_BUY_STOCK_COUNT_EMPTY = "تعداد سهم پیشنهادی نباید خالی باشد";
     public static final String PROPOSE_BUY_STOCK_PROPOSE_MORE_THAN_COUNT = "تعداد سهام ویشنهادی برای خرید بیشتر از سهام قرار داده شده برای فروش است";
     public static final String PROPOSE_BUY_STOCK_NOT_FOUND = "چنین پیشنهاد خرید سهامی وجود ندارد";
+    public static final String PROPOSE_BUY_STOCK_NOT_IN_OPEN_STATUS = "پیشنهاد خرید سهام در وضعیت باز نیست";
+    public static final String PROPOSE_BUY_STOCK_NOT_DELETEABLE = "پیشنهاد خرید سهام در وضعیت قابل حذف شدن نمی باشد";
+
+    /*
+    ACCEPTANCE_SALE_STOCK
+     */
+    public static final String ACCEPTANCE_SALE_STOCK_SELL_TIME_EMPTY = "زمان ثبت قرارداد باید مشخص شود";
+    public static final String ACCEPTANCE_SALE_STOCK_LOCATION_EMPTY = "مکان ثبت قرار داد باید مشخص شود";
+    public static final String ACCEPTANCE_SALE_STOCK_NOT_EXIST = "چنین قراردادی به ثبت نرسیده است";
+    public static final String ACCEPTANCE_SALE_STOCK_NOT_IN_PROPER_STATUS = "این قرارداد در وضعیت قابل انتقال نمی باشد";
 }
