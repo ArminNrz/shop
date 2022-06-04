@@ -15,6 +15,7 @@ public interface ProposeBuyStockMapper {
     @Mapping(target = "user", source = "user")
     @Mapping(target = "saleStock", source = "saleStock")
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     ProposeBuyStock toEntity(ProposeBuyStockCreateDTO buyStockCreateDTO, SaleStock saleStock, AppUser user);
 
     @Mapping(source = "user.firstName", target = "firstName")
