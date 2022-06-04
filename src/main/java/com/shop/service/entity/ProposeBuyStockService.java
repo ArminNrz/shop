@@ -8,15 +8,19 @@ import com.shop.entity.SaleStock;
 import com.shop.entity.enumartion.ProposeBuyStockStatus;
 import com.shop.mapper.ProposeBuyStockMapper;
 import com.shop.repository.ProposeBuyStockRepository;
+import com.shop.specification.ProposeBuySpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -59,5 +63,19 @@ public class ProposeBuyStockService {
         log.debug("Try to delete propose buy stock with id: {}", id);
         repository.delete(proposeBuyStock);
         log.info("Deleted propose buy stock with id: {}", id);
+    }
+
+    public Page<ProposeBuyStockDetailsDTO> findByUserId(Long userId, ProposeBuySpecification specification, int pageCount, int pageSize) {
+        log.debug("Try to find propose buy stock for user id: {}", userId);
+        List<ProposeBuyStockDetailsDTO> resultList = repository.findAll(specification).stream()
+                .filter(proposeBuyStock -> proposeBuyStock.getUser().getId().equals(userId))
+                .map(mapper::toDetailsDTO)
+                .limit((long) pageCount * pageSize)
+                .collect(Collectors.toList());
+
+        if (pageCount > 1)
+            resultList = resultList.stream().skip((long) (pageCount - 1) * pageSize).collect(Collectors.toList());
+
+        return new PageImpl<>(resultList);
     }
 }

@@ -26,6 +26,9 @@ public class ProposeBuyStock implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;

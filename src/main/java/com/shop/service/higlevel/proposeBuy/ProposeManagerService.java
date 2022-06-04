@@ -3,10 +3,13 @@ package com.shop.service.higlevel.proposeBuy;
 import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockCreateDTO;
 import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockResponseDTO;
 import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
+import com.shop.dto.proposeStock.ProposeBuyStockDetailsDTO;
 import com.shop.entity.AppUser;
 import com.shop.service.entity.AcceptanceSaleStockService;
+import com.shop.service.entity.ProposeBuyStockService;
 import com.shop.service.lowlevel.SecurityService;
 import com.shop.specification.AcceptanceSaleStockSpecification;
+import com.shop.specification.ProposeBuySpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ public class ProposeManagerService {
     private final AcceptBuyProposeStockHandler acceptBuyProposeStockHandler;
     private final AcceptanceSaleStockService acceptanceSaleStockService;
     private final TransferAcceptanceStockHandler transferAcceptanceStockHandler;
+    private final ProposeBuyStockService proposeBuyStockService;
 
     public void buyPropose(ProposeBuyStockCreateDTO buyStockCreateDTO, String token) {
         AppUser user = securityService.getUserWithToken(token);
@@ -40,6 +44,11 @@ public class ProposeManagerService {
         List<String> roles = securityService.getTokenRoles(token);
         boolean isAdmin = roles.contains("ROLE_ADMIN");
         deleteProposeBuyStockHandler.delete(proposeBuyStockId, user, isAdmin);
+    }
+
+    public Page<ProposeBuyStockDetailsDTO> getUserPropose(String token, ProposeBuySpecification specification, int pageCount, int pageSize) {
+        AppUser user = securityService.getUserWithToken(token);
+        return proposeBuyStockService.findByUserId(user.getId(), specification, pageCount, pageSize);
     }
 
     public void acceptBuyPropose(AcceptanceSaleStockCreateDTO createDTO, Long proposeBuyStockId, String token) {
