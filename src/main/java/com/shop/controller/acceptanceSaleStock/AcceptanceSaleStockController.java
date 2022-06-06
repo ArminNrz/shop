@@ -1,8 +1,8 @@
 package com.shop.controller.acceptanceSaleStock;
 
 import com.shop.common.Constant;
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockCreateDTO;
 import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockResponseDTO;
+import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockUpdateDTO;
 import com.shop.service.higlevel.proposeBuy.ProposeManagerService;
 import com.shop.specification.AcceptanceSaleStockSpecification;
 import com.shop.utility.PaginationUtil;
@@ -20,26 +20,27 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(Constant.BASE_URL + Constant.VERSION)
+@RequestMapping(Constant.BASE_URL + Constant.VERSION + "/acceptance")
 @Slf4j
 @RequiredArgsConstructor
 public class AcceptanceSaleStockController {
 
     private final ProposeManagerService proposeManagerService;
 
-    @PostMapping("/propose-buy-stock/{id}/accept")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<Void> acceptPropose(
-            @PathVariable("id") Long proposeBuyStockId,
-            @Valid @RequestBody AcceptanceSaleStockCreateDTO createDTO,
+    public ResponseEntity<Void> updateAcceptance(
+            @PathVariable("id") Long acceptanceId,
+            @Valid @RequestBody AcceptanceSaleStockUpdateDTO updateDTO,
             @RequestHeader("Authorization") String token
     ) {
-        log.info("REST request to accept propose to buy with id: {}, createDTO: {}", proposeBuyStockId, createDTO);
-        proposeManagerService.acceptBuyPropose(createDTO, proposeBuyStockId, token);
+        log.info("REST request to update acceptance with id: {}, updateDTO: {}", acceptanceId, updateDTO);
+        updateDTO.setAcceptanceId(acceptanceId);
+        proposeManagerService.updateAcceptance(token, updateDTO);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/acceptance")
+    @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<Page<AcceptanceSaleStockResponseDTO>> getAcceptance(
             AcceptanceSaleStockSpecification specification,
@@ -53,7 +54,7 @@ public class AcceptanceSaleStockController {
                 .body(page);
     }
 
-    @PutMapping("/acceptance/{id}/transfer")
+    @PutMapping("/{id}/transfer")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Void> transferStock(
             @PathVariable("id") Long acceptanceId,

@@ -59,6 +59,7 @@ public class Constant {
     public static final String PROPOSE_BUY_STOCK_NOT_FOUND = "چنین پیشنهاد خرید سهامی وجود ندارد";
     public static final String PROPOSE_BUY_STOCK_NOT_IN_OPEN_STATUS = "پیشنهاد خرید سهام در وضعیت باز نیست";
     public static final String PROPOSE_BUY_STOCK_NOT_DELETEABLE = "پیشنهاد خرید سهام در وضعیت قابل حذف شدن نمی باشد";
+    public static final String PROPOSE_BUY_YOUR_STOCK_NOT_ALLOWED = "اجازه ثبت پیشنهاد برای خرید سهام خود را ندارید";
 
     /*
     ACCEPTANCE_SALE_STOCK
@@ -66,5 +67,6 @@ public class Constant {
     public static final String ACCEPTANCE_SALE_STOCK_SELL_TIME_EMPTY = "زمان ثبت قرارداد باید مشخص شود";
     public static final String ACCEPTANCE_SALE_STOCK_LOCATION_EMPTY = "مکان ثبت قرار داد باید مشخص شود";
     public static final String ACCEPTANCE_SALE_STOCK_NOT_EXIST = "چنین قراردادی به ثبت نرسیده است";
-    public static final String ACCEPTANCE_SALE_STOCK_NOT_IN_PROPER_STATUS = "این قرارداد در وضعیت قابل انتقال نمی باشد";
+    public static final String ACCEPTANCE_SALE_STOCK_NOT_IN_PROPER_TRANSFER_STATUS = "این قرارداد در وضعیت قابل انتقال نمی باشد";
+    public static final String ACCEPTANCE_SALE_STOCK_NOT_IN_PROPER_UPDATE_STATUS = "این قرار داد در وضعیت قابل به روز رسانی نمی باشد";
 }

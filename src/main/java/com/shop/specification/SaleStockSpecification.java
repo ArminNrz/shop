@@ -13,6 +13,8 @@ import org.springframework.data.jpa.domain.Specification;
 @JoinFetch(paths = {"user"})
 @And({
         @Spec(path = "user.phoneNumber", params = "userPhoneNumber.equals", spec = Equal.class),
+        @Spec(path = "user.firstName", params = "userPhoneFirstName.equals", spec = Equal.class),
+        @Spec(path = "user.lastName", params = "userLastName.equals", spec = Equal.class),
         @Spec(path = "id", params = "id.equals", spec = Equal.class),
         @Spec(path = "saleStockStatus", params = "status.in", spec = In.class),
         @Spec(path = "unitPrice", params = "unitPrice.graterThan", spec = GreaterThanOrEqual.class),

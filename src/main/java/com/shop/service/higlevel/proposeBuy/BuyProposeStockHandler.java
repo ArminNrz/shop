@@ -43,6 +43,11 @@ public class BuyProposeStockHandler {
             throw Problem.valueOf(Status.BAD_REQUEST, Constant.PROPOSE_BUY_STOCK_PROPOSE_MORE_THAN_COUNT);
         }
 
+        if (saleStock.getUser().getId().equals(buyStockCreateDTO.getUserId())) {
+            log.error("Can not propose to buy your sale stock with id: {}", saleStock.getId());
+            throw Problem.valueOf(Status.BAD_REQUEST, Constant.PROPOSE_BUY_YOUR_STOCK_NOT_ALLOWED);
+        }
+
         if (buyStockCreateDTO.getProposeUnitCost() == null) {
             buyStockCreateDTO.setProposeUnitCost(saleStock.getUnitPrice());
         }

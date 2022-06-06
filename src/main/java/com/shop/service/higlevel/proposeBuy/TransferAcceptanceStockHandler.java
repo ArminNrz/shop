@@ -59,7 +59,7 @@ public class TransferAcceptanceStockHandler {
 
         if (!acceptanceSaleStock.getStatus().equals(AcceptanceSaleStockStatus.PENDING)) {
             log.error("Acceptance sale stock with id: {}, is not in pending status", acceptanceId);
-            throw Problem.valueOf(Status.BAD_REQUEST, Constant.ACCEPTANCE_SALE_STOCK_NOT_IN_PROPER_STATUS);
+            throw Problem.valueOf(Status.BAD_REQUEST, Constant.ACCEPTANCE_SALE_STOCK_NOT_IN_PROPER_TRANSFER_STATUS);
         }
     }
 }
