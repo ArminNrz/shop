@@ -7,7 +7,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "acceptance_sale_stock")
+@Table(name = "acceptance_sale_stock", indexes = {
+        @Index(name = "id_seller_idx", columnList = "id, seller_id")
+})
 @Data
 public class AcceptanceSaleStock implements Serializable {
 

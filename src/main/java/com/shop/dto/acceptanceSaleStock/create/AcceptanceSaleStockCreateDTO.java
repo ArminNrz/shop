@@ -1,4 +1,4 @@
-package com.shop.dto.acceptanceSaleStock;
+package com.shop.dto.acceptanceSaleStock.create;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shop.common.Constant;

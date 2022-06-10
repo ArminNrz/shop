@@ -1,7 +1,7 @@
 package com.shop.service.higlevel.proposeBuy;
 
 import com.shop.common.Constant;
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockCreateDTO;
+import com.shop.dto.acceptanceSaleStock.create.AcceptanceSaleStockCreateDTO;
 import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
 import com.shop.entity.AppUser;
 import com.shop.entity.ProposeBuyStock;
@@ -67,21 +67,30 @@ public class AcceptBuyProposeStockHandler {
     }
 
     private void updateStatus(ProposeBuyStock proposeBuyStock, SaleStock saleStock) {
-        proposeBuyStock.setStatus(ProposeBuyStockStatus.ACCEPTED);
-        long remainStock = saleStock.getStockCount() - proposeBuyStock.getProposeCount();
 
-        if (remainStock == 0) {
+        long remainStock = saleStock.getStockCount() - proposeBuyStock.getProposeCount();
+        long otherProposeCount = saleStock.getProposeBuyStocks().stream()
+                .filter(propose -> propose.getStatus().equals(ProposeBuyStockStatus.ACCEPTED))
+                .map(ProposeBuyStock::getProposeCount)
+                .reduce(0L, Long::sum);
+        remainStock -= otherProposeCount;
+
+        if (remainStock <= 0) {
             saleStock.setSaleStockStatus(SaleStockStatus.CLOSE);
             saleStock.getProposeBuyStocks().stream()
                     .filter(propose -> !propose.getId().equals(proposeBuyStock.getId()))
+                    .filter(propose -> !propose.getStatus().equals(ProposeBuyStockStatus.ACCEPTED))
                     .forEach(propose -> propose.setStatus(ProposeBuyStockStatus.CLOSE));
         }
-        else if (remainStock > 0) {
+        else {
             saleStock.setSaleStockStatus(SaleStockStatus.PENDING);
+            long finalRemainStock = remainStock;
             saleStock.getProposeBuyStocks().stream()
                     .filter(propose -> !propose.getId().equals(proposeBuyStock.getId()))
-                    .forEach(propose -> updateOtherProposeStatus(remainStock, propose));
+                    .forEach(propose -> updateOtherProposeStatus(finalRemainStock, propose));
         }
+
+        proposeBuyStock.setStatus(ProposeBuyStockStatus.ACCEPTED);
     }
 
     private void updateOtherProposeStatus(long remainStock, ProposeBuyStock proposeBuyStock) {

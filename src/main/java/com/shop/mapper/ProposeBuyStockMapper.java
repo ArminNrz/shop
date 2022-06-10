@@ -22,4 +22,9 @@ public interface ProposeBuyStockMapper {
     @Mapping(source = "user.lastName", target = "lastName")
     @Mapping(source = "user.phoneNumber", target = "phoneNumber")
     ProposeBuyStockDetailsDTO toDetailsDTO(ProposeBuyStock entity);
+
+    @Mapping(source = "saleStock.user.firstName", target = "firstName")
+    @Mapping(source = "saleStock.user.lastName", target = "lastName")
+    @Mapping(source = "saleStock.user.phoneNumber", target = "phoneNumber")
+    ProposeBuyStockDetailsDTO toUserDetailsDTO(ProposeBuyStock entity);
 }

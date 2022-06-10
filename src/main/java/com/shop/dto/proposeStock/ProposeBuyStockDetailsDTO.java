@@ -14,4 +14,5 @@ public class ProposeBuyStockDetailsDTO {
     private Long proposeCount;
     private BigDecimal proposeUnitCost;
     private ProposeBuyStockStatus status;
+    private Long created;
 }

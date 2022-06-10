@@ -1,7 +1,8 @@
 package com.shop.service.higlevel.proposeBuy;
 
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockCreateDTO;
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockResponseDTO;
+import com.shop.dto.acceptanceSaleStock.create.AcceptanceSaleStockCreateDTO;
+import com.shop.dto.acceptanceSaleStock.create.AcceptanceSaleStockResponseDTO;
+import com.shop.dto.acceptanceSaleStock.update.AcceptanceSaleStockUpdateDTO;
 import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
 import com.shop.dto.proposeStock.ProposeBuyStockDetailsDTO;
 import com.shop.entity.AppUser;
@@ -13,12 +14,10 @@ import com.shop.specification.ProposeBuySpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -65,17 +64,18 @@ public class ProposeManagerService {
         }
         else {
             AppUser user = securityService.getUserWithToken(token);
-            List<AcceptanceSaleStockResponseDTO> resultList = acceptanceSaleStockService.get(specification, pageable).stream()
-                    .filter(responseDTO ->
-                            responseDTO.getSellerPhoneNumber().equals(user.getPhoneNumber()) ||
-                            responseDTO.getBuyerPhoneNumber().equals(user.getPhoneNumber())
-                    ).collect(Collectors.toList());
-            return new PageImpl<>(resultList);
+            return acceptanceSaleStockService.get(specification, pageable, user.getPhoneNumber());
         }
     }
 
     public void transferAcceptanceStock(Long acceptanceId, String token) {
         AppUser modifier = securityService.getUserWithToken(token);
         transferAcceptanceStockHandler.transfer(acceptanceId, modifier);
+    }
+
+    public void updateAcceptance(AcceptanceSaleStockUpdateDTO updateDTO, String token) {
+        AppUser user = securityService.getUserWithToken(token);
+        updateDTO.setUserId(user.getId());
+        acceptanceSaleStockService.updateSellTime(updateDTO);
     }
 }
