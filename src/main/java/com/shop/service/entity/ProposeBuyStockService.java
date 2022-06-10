@@ -69,7 +69,7 @@ public class ProposeBuyStockService {
         log.debug("Try to find propose buy stock for user id: {}", userId);
         List<ProposeBuyStockDetailsDTO> resultList = repository.findAll(specification).stream()
                 .filter(proposeBuyStock -> proposeBuyStock.getUser().getId().equals(userId))
-                .map(mapper::toDetailsDTO)
+                .map(mapper::toUserDetailsDTO)
                 .limit((long) pageCount * pageSize)
                 .collect(Collectors.toList());
 
