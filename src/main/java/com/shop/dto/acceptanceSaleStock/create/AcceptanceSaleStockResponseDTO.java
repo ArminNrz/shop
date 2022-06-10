@@ -1,4 +1,4 @@
-package com.shop.dto.acceptanceSaleStock;
+package com.shop.dto.acceptanceSaleStock.create;
 
 import com.shop.entity.enumartion.AcceptanceSaleStockStatus;
 import lombok.Data;

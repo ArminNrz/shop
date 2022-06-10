@@ -1,7 +1,7 @@
 package com.shop.service.higlevel.proposeBuy;
 
 import com.shop.common.Constant;
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockCreateDTO;
+import com.shop.dto.acceptanceSaleStock.create.AcceptanceSaleStockCreateDTO;
 import com.shop.dto.proposeStock.ProposeBuyStockCreateDTO;
 import com.shop.entity.AppUser;
 import com.shop.entity.ProposeBuyStock;

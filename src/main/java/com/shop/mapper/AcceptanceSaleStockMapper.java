@@ -1,7 +1,8 @@
 package com.shop.mapper;
 
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockCreateDTO;
-import com.shop.dto.acceptanceSaleStock.AcceptanceSaleStockResponseDTO;
+import com.shop.dto.acceptanceSaleStock.create.AcceptanceSaleStockCreateDTO;
+import com.shop.dto.acceptanceSaleStock.create.AcceptanceSaleStockResponseDTO;
+import com.shop.dto.acceptanceSaleStock.update.AcceptanceSaleStockUpdateDTO;
 import com.shop.entity.AcceptanceSaleStock;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,4 +24,9 @@ public interface AcceptanceSaleStockMapper {
     @Mapping(source = "proposeBuyStock.proposeCount", target = "stockCount")
     @Mapping(source = "proposeBuyStock.proposeUnitCost", target = "unitPrice")
     AcceptanceSaleStockResponseDTO toResponseDTO(AcceptanceSaleStock entity);
+
+    @Mapping(source = "updateDTO.sellTime", target = "sellTime")
+    @Mapping(source = "updateDTO.sellLocation", target = "sellLocation")
+    @Mapping(source = "entity.id", target = "id")
+    AcceptanceSaleStock fromUpdateDTO(AcceptanceSaleStock entity, AcceptanceSaleStockUpdateDTO updateDTO);
 }
