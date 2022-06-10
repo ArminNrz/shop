@@ -3,6 +3,7 @@ package com.shop.service.higlevel;
 import com.shop.common.Constant;
 import com.shop.dto.proposeStock.ProposeBuyStockDetailsDTO;
 import com.shop.dto.saleStock.SaleStockCreateDTO;
+import com.shop.dto.saleStock.SaleStockResponseDTO;
 import com.shop.dto.saleStock.SaleStockUpdateDTO;
 import com.shop.entity.AppUser;
 import com.shop.entity.SaleStock;
@@ -11,6 +12,7 @@ import com.shop.service.entity.ProposeBuyStockService;
 import com.shop.service.entity.SaleStockService;
 import com.shop.service.entity.userStockManager.UserStockManagerService;
 import com.shop.service.lowlevel.SecurityService;
+import com.shop.specification.SaleStockSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -55,6 +57,11 @@ public class SaleStockManagerService {
         saleStockService.update(updateDTO, foundEntity);
     }
 
+    public Page<SaleStockResponseDTO> getGeneral(SaleStockSpecification specification, Pageable pageable, String token) {
+        AppUser user = securityService.getUserWithToken(token);
+        return saleStockService.findGeneral(specification, pageable, user.getPhoneNumber());
+    }
+
     public Page<ProposeBuyStockDetailsDTO> getProposeDetails(Long saleStockId, Pageable pageable, String token) {
         AppUser user = securityService.getUserWithToken(token);
 
@@ -64,5 +71,10 @@ public class SaleStockManagerService {
         }
 
         return proposeBuyStockService.findBySaleStock(foundSaleStock.getId(), pageable);
+    }
+
+    public Page<SaleStockResponseDTO> getUserSaleStock(SaleStockSpecification specification, Pageable pageable, String token) {
+        AppUser user = securityService.getUserWithToken(token);
+        return saleStockService.findUserSaleStock(specification, pageable, user.getPhoneNumber());
     }
 }

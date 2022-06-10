@@ -58,12 +58,27 @@ public class SaleStockController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<?> getGeneral(
+    public ResponseEntity<Page<SaleStockResponseDTO>> getGeneral(
             SaleStockSpecification specification,
-            @PageableDefault(sort = "updated", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(sort = "updated", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestHeader("Authorization") String token
     ) {
         log.info("REST request to get general sale stocks, with specification: {}, pageable: {}", specification, pageable);
-        Page<SaleStockResponseDTO> page = service.findGeneral(specification, pageable);
+        Page<SaleStockResponseDTO> page = saleStockManagerService.getGeneral(specification, pageable, token);
+        return ResponseEntity.ok()
+                .headers(PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page))
+                .body(page);
+    }
+
+    @GetMapping("/mine")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<Page<SaleStockResponseDTO>> getMine(
+            SaleStockSpecification specification,
+            @PageableDefault(sort = "updated", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestHeader("Authorization") String token
+    ) {
+        log.info("REST request to get user sale stocks, with specification: {}, pageable: {}", specification, pageable);
+        Page<SaleStockResponseDTO> page = saleStockManagerService.getUserSaleStock(specification, pageable, token);
         return ResponseEntity.ok()
                 .headers(PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page))
                 .body(page);
