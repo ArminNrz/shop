@@ -18,7 +18,7 @@ services:
   mysql-server:
     build:
       context: .
-    image: mysql:latest
+    image: mysql:oracle
     restart: unless-stopped
     container_name: shop-mysql-server
     ports:
